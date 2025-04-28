@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tempering_sorting_logic</title>
+  <style>
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; margin: 0; padding: 40px; }
+    h2 { color: #333; }
+    textarea { width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 8px; border: 1px solid #ccc; resize: vertical; font-size: 16px; }
+    button { width: 100%; background-color: #4CAF50; color: white; border: none; padding: 12px; font-size: 16px; border-radius: 8px; cursor: pointer; transition: background-color 0.3s ease; }
+    button:hover { background-color: #45a049; }
+    table { margin-top: 20px; width: 100%; border-collapse: collapse; background-color: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    th, td { padding: 12px 15px; text-align: center; border-bottom: 1px solid #ddd; }
+    th { background-color: #4CAF50; color: white; font-weight: bold; }
+    tr:hover { background-color: #f1f1f1; }
+    #unosRezultat { margin-top: 20px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    ul { padding-left: 20px; }
+    li { margin-bottom: 8px; font-size: 16px; }
+  </style>
+</head>
+<body>
+
+  <h2>Add Types and Repeat Numbers</h2>
+
+  <textarea id="tipovi" placeholder="Enter types separated by commas (e.g. type 1, type 2)"></textarea>
+  <textarea id="brojevi" placeholder="Enter repeat numbers separated by commas (e.g. 5, 3)"></textarea>
+  <button onclick="dodajUNiz()">Add</button>
+
+  <div id="unosRezultat"></div>
+
+  <h2>Result:</h2>
+  <table id="grid">
+    <tr>
+      <th>Serial number</th>
+      <th>Type</th>
+    </tr>
+  </table>
+
+<script>
+function dodajUNiz() {
+  const tipoviInput = document.getElementById('tipovi').value.trim();
+  const brojeviInput = document.getElementById('brojevi').value.trim();
+
+  if (!tipoviInput || !brojeviInput) {
+    alert('Please enter all values!');
+    return;
+  }
+
+  const tipovi = tipoviInput.split(',').map(el => el.trim());
+  const brojevi = brojeviInput.split(',').map(el => parseInt(el.trim()));
+
+  if (tipovi.length !== brojevi.length) {
+    alert('The number of types and repeat numbers must match!');
+    return;
+  }
+
+  let mapiraniNiz = {};
+
+  for (let i = 0; i < tipovi.length; i++) {
+    const kljuc = `${tipovi[i]}`;
+    if (mapiraniNiz[kljuc]) {
+      mapiraniNiz[kljuc] += brojevi[i];
+    } else {
+      mapiraniNiz[kljuc] = brojevi[i];
+    }
+  }
+
+  let niz = [];
+
+  for (const kljuc in mapiraniNiz) {
+    for (let j = 0; j < mapiraniNiz[kljuc]; j++) {
+      niz.push(kljuc);
+    }
+  }
+
+  prikaziUnos(tipovi, brojevi);
+  prikaziNiz(niz);
+
+  document.getElementById('tipovi').value = '';
+  document.getElementById('brojevi').value = '';
+}
+
+function prikaziNiz(niz) {
+  const grid = document.getElementById('grid');
+
+  grid.innerHTML = `
+    <tr>
+      <th>Serial number</th>
+      <th>Type</th>
+    </tr>
+  `;
+
+  niz.forEach((element, index) => {
+    const row = grid.insertRow();
+    const cell1 = row.insertCell(0);
+    const cell2 = row.insertCell(1);
+    cell1.textContent = index + 1;
+    cell2.textContent = element;
+  });
+}
+
+function prikaziUnos(tipovi, brojevi) {
+  const unosDiv = document.getElementById('unosRezultat');
+  let tekst = '<h3>Entered data:</h3><ul>';
+  for (let i = 0; i < tipovi.length; i++) {
+    tekst += `<li>${tipovi[i]} - ${brojevi[i]} times</li>`;
+  }
+  tekst += '</ul>';
+  unosDiv.innerHTML = tekst;
+}
+</script>
+
+</body>
+</html>
